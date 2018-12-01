@@ -1,0 +1,9 @@
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let phoneNumber of phoneNumbers | async">
+      <ion-label>{{phoneNumber.name +' - '+ phoneNumber.number}}</ion-label>
+      <ion-checkbox [(ngModel)]="pepperoni"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>
+

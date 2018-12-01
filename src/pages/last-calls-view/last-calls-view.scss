@@ -1,0 +1,34 @@
+page-last-calls-view {
+
+}
+
+.transparent-background-icon {
+  background-color: transparent;
+}
+
+@mixin last-calls-font {
+  font-size: 30px;
+}
+
+.whatsapp-icon {
+  @include last-calls-font;
+  color: darkgreen;
+}
+
+.sms-icon {
+  @include last-calls-font;
+  color: #0277BD;
+}
+
+.phone-number {
+  @include last-calls-font;
+}
+
+.warning-message{
+  color: red; font-weight: bold
+}
+
+.last-calls-list{
+  height: 50vh;
+  overflow: auto;
+}

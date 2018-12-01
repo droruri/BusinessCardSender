@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'ADD_NEW_MESSAGE' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-textarea type="text" [(ngModel)]="addedMessageContent"
+                      [placeholder]="'ADD_MESSAGE_CONTENT' | translate"></ion-textarea>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center="true">
+        <button ion-button (click)="saveMessage()">{{'SAVE_MESSAGE' | translate}}</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

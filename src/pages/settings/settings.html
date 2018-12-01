@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'SETTINGS_TITLE' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-list *ngIf="page == 'main'">
+
+    <ion-item>
+      <ion-label>{{ 'SETTINGS_CHANGE_USERNAME' | translate }}</ion-label>
+      <ion-input [(ngModel)]="username"></ion-input>
+    </ion-item>
+
+    <ion-item text-center="true">
+      <button ion-button color="primary" (click)="saveSettings()">
+        {{ 'SAVE_SETTINGS' | translate }}
+      </button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="page == 'profile'">
+    <ion-item>
+      <ion-label>{{ 'SETTINGS_OPTION4' | translate }}</ion-label>
+
+    </ion-item>
+  </ion-list>
+</ion-content>

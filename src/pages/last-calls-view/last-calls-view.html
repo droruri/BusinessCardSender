@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'LAST_CALLS_VIEW' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <ion-list class="last-calls-list">
+    <ion-item dir="rtl" *ngFor="let item of lastCalls">
+      <ion-label class="phone-number">{{ getContactNameOrNumber(item) }}</ion-label>
+      <button item-end class="transparent-background-icon"
+              (click)="sendWhatsappMessage(item.number)"
+              [disabled]="isFavoriteMessageInvalid()">
+        <ion-icon class="whatsapp-icon" name="logo-whatsapp"></ion-icon>
+      </button>
+      <button item-end class="transparent-background-icon"
+              (click)="sendSmsMessage(item.number)"
+              [disabled]="isFavoriteMessageInvalid()">
+        <ion-icon class="sms-icon" name="chatboxes"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-list>
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center="true">
+        <h1>הודעה לשליחה:</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center="true">
+        {{displayContent()}}
+      </ion-col>
+    </ion-row>
+
+    <ion-row [hidden]="isUsernameValid">
+      <ion-col text-center="true">
+        <span class="warning-message">
+          שים לב! שם המשתמש לא תקין/לא הוזן, כתובת האתר לא תישלח
+        </span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

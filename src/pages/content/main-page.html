@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'WELCOME_TITLE' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content style="text-align: center;display: flex;flex-direction: column" padding>
+  <button ion-button color="primary" (click)="sendMessageToLastCaller()"
+          [hidden]="(favoriteMessage !== null)?favoriteMessage.id === null:true">
+    {{'SEND_MESSAGE_TO_LAST_CALLER' | translate}}
+  </button>
+
+  <button ion-button color="secondary" (click)="whatsAppShare()"
+          [hidden]="(favoriteMessage !== null)?favoriteMessage.id === null:true">
+    {{'SEND_WHATSAPP_MESSAGE_TO_LAST_CALLER' | translate}}
+  </button>
+
+  <button ion-button color="primary" (click)="regularShare()"
+          [hidden]="(favoriteMessage !== null)?favoriteMessage.id === null:true">
+    {{'SHARE_IN_SOCIAL_MEDIA' | translate}} <ion-icon class="share-icon" name="share"></ion-icon>
+  </button>
+
+  <button ion-button color="light" (click)="navCtrl.push('AddNewMessagePage')">
+    {{'CREATE_INSTANT_MESSAGES' | translate}}
+  </button>
+
+  <button ion-button color="light" (click)="navCtrl.push('MessagesManagingPage')"
+          [hidden]="(favoriteMessage !== null)?favoriteMessage.id !== null:false">
+    {{'SET_FAVORITE_MESSAGE' | translate}}
+  </button>
+</ion-content>

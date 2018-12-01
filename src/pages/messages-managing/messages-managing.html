@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'MESSAGE_SENDING' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-card *ngFor="let message of messagesToSend">
+        <ion-card-header>
+          <div>
+            <span [hidden]="isMessageNotFavorite(message)">
+              <ion-icon name="star" color="gold"></ion-icon>
+            </span>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                {{message.content}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <button ion-button color="danger" (click)="deleteMessage(message)">
+                  {{'DELETE_MESSAGE' | translate}}
+                </button>
+                <button ion-button color="primary" (click)="setFavoriteMessage(message)"
+                        [disabled]="!isMessageNotFavorite(message)">
+                  {{'SET_AS_FAVORITE_MESSAGE' | translate}}
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-row>
+  </ion-grid>
+</ion-content>
