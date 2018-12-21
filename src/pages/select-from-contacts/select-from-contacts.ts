@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {ContactsProvider} from "../../providers/contacts/contacts";
 import {Observable} from "rxjs";
-import {PhoneNumber} from "../../models/PhoneNumber";
+import {CallDetails} from "../../models/CallDetails";
 
 /**
  * Generated class for the SelectFromContactsPage page.
@@ -18,7 +18,7 @@ import {PhoneNumber} from "../../models/PhoneNumber";
 })
 export class SelectFromContactsPage {
 
-  phoneNumbers:Observable<PhoneNumber[]> = new Observable<PhoneNumber[]>();
+  phoneNumbers:Observable<CallDetails[]> = new Observable<CallDetails[]>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private contactsProvider:ContactsProvider) {

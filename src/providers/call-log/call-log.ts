@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AndroidCallLog} from "../../models/AndroidCallLog";
 import {BehaviorSubject, Observable} from "rxjs";
-import {PhoneNumber} from "../../models/PhoneNumber";
+import {CallDetails} from "../../models/CallDetails";
 import {CallLog, CallLogObject} from "@ionic-native/call-log";
 import {Platform} from "ionic-angular";
 
@@ -14,7 +14,7 @@ import {Platform} from "ionic-angular";
 @Injectable()
 export class CallLogProvider {
 
-  phoneNumbers:PhoneNumber[]=[];
+  phoneNumbers:CallDetails[]=[];
   callLogs:AndroidCallLog[]=[];
   lastCall: AndroidCallLog = null;
 
@@ -23,8 +23,8 @@ export class CallLogProvider {
   isLastCallWasPerformedSubject:BehaviorSubject<boolean>=new BehaviorSubject<boolean>(false);
   private lastCallSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   lastCallObservable: Observable<any> = this.lastCallSubject.asObservable();
-  private callLogPhoneNumbersSubject: BehaviorSubject<PhoneNumber[]> = new BehaviorSubject<PhoneNumber[]>([]);
-  callLogPhoneNumbersObservable: Observable<PhoneNumber[]> = this.callLogPhoneNumbersSubject.asObservable();
+  private callLogPhoneNumbersSubject: BehaviorSubject<CallDetails[]> = new BehaviorSubject<CallDetails[]>([]);
+  callLogPhoneNumbersObservable: Observable<CallDetails[]> = this.callLogPhoneNumbersSubject.asObservable();
 
   constructor(private callLog: CallLog,public plt :Platform){
   }
@@ -77,6 +77,18 @@ export class CallLogProvider {
   private observeAndSendAllPhoneNumbersOfCallLog() {
     this.callLogs.forEach(
       (callLog) => this.phoneNumbers.push({name: callLog.name, number: callLog.number}));
+    this.phoneNumbers = this.removeDuplicateNumbersFromArray(this.phoneNumbers);
     this.callLogPhoneNumbersSubject.next(this.phoneNumbers);
+  }
+
+  private removeDuplicateNumbersFromArray(callDetails:CallDetails[]){
+    return callDetails.filter((item, pos) => {
+      return this.getNumbersFromCallDetails(callDetails)
+        .indexOf(item.number) == pos
+    })
+  }
+
+  private getNumbersFromCallDetails(callDetails:CallDetails[]){
+    return callDetails.map(callDetail=>callDetail.number);
   }
 }

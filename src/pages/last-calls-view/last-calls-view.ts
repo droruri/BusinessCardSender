@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {CallLogProvider} from "../../providers/call-log/call-log";
 import {Subscription} from "rxjs";
-import {PhoneNumber} from "../../models/PhoneNumber";
+import {CallDetails} from "../../models/CallDetails";
 import {SendingSmsProvider} from "../../providers/sending-sms/sending-sms";
 import {MessagesStorageProvider} from "../../providers/messages-storage/messages-storage";
 import {Message} from "../../models/Message";
@@ -22,13 +22,15 @@ import {UserSettingsProvider} from "../../providers/user-settings/user-settings"
 })
 export class LastCallsViewPage {
 
-  lastCalls:PhoneNumber[];
+  lastCalls:CallDetails[];
   callLogPhoneNumbersSubscription:Subscription;
   usernameValiditySubscription:Subscription;
 
   favoriteMessage:Message = {id:null, content:""};
 
   isUsernameValid:boolean = false;
+
+  NUMBER_OF_LAST_CALLS = 10;
 
   constructor(public navCtrl: NavController,
               private callLog:CallLogProvider,
@@ -45,7 +47,7 @@ export class LastCallsViewPage {
 
     this.callLogPhoneNumbersSubscription = this.callLog.callLogPhoneNumbersObservable
       .subscribe((callLogs) => {
-        this.lastCalls = [...callLogs.slice(0, 10)]
+        this.lastCalls = [...callLogs.slice(0, this.NUMBER_OF_LAST_CALLS)]
       });
 
     this.messagesStorageProvider.favoriteMessageObservable.subscribe((message)=>{
@@ -83,12 +85,11 @@ export class LastCallsViewPage {
       this.favoriteMessage.content.length === 0;
   }
 
-  getContactNameOrNumber(phoneNumber: PhoneNumber) {
+  getContactNameOrNumber(phoneNumber: CallDetails) {
     if ((phoneNumber.name !== null) && (phoneNumber.name !== undefined) && phoneNumber.name.length > 0) {
       return phoneNumber.name;
     } else {
       return phoneNumber.number;
     }
   }
-
 }
