@@ -1,4 +1,4 @@
-export interface PhoneNumber {
+export interface CallDetails {
   name:string;
   number:string;
 }

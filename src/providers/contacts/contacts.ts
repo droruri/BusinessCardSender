@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {PhoneNumber} from "../../models/PhoneNumber";
+import {CallDetails} from "../../models/CallDetails";
 import {BehaviorSubject, Observable} from "rxjs";
 /*import {ContactFieldType, Contacts} from "@ionic-native/contacts";*/
 import {AndroidPermissions} from "@ionic-native/android-permissions";
@@ -9,10 +9,10 @@ import {PermissionsProvider} from "../permissions/permissions";
 export class ContactsProvider {
 
   contacts: any[] = [];
-  phoneNumbers: PhoneNumber[] = [];
+  phoneNumbers: CallDetails[] = [];
 
-  private contactsPhoneNumbersSubject: BehaviorSubject<PhoneNumber[]> = new BehaviorSubject<PhoneNumber[]>(null);
-  contactsPhoneNumbersObservable: Observable<PhoneNumber[]> = this.contactsPhoneNumbersSubject.asObservable();
+  private contactsPhoneNumbersSubject: BehaviorSubject<CallDetails[]> = new BehaviorSubject<CallDetails[]>(null);
+  contactsPhoneNumbersObservable: Observable<CallDetails[]> = this.contactsPhoneNumbersSubject.asObservable();
 
   constructor(/*private contactsNative: Contacts,*/
               private permissionsProvider: PermissionsProvider,
