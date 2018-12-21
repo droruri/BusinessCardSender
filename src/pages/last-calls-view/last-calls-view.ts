@@ -30,6 +30,8 @@ export class LastCallsViewPage {
 
   isUsernameValid:boolean = false;
 
+  NUMBER_OF_LAST_CALLS = 10;
+
   constructor(public navCtrl: NavController,
               private callLog:CallLogProvider,
               private sendingSmsProvider:SendingSmsProvider,
@@ -45,7 +47,7 @@ export class LastCallsViewPage {
 
     this.callLogPhoneNumbersSubscription = this.callLog.callLogPhoneNumbersObservable
       .subscribe((callLogs) => {
-        this.lastCalls = [...callLogs.slice(0, 10)]
+        this.lastCalls = [...callLogs.slice(0, this.NUMBER_OF_LAST_CALLS)]
       });
 
     this.messagesStorageProvider.favoriteMessageObservable.subscribe((message)=>{
