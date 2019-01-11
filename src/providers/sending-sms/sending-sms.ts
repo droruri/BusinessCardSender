@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AndroidCallLog} from "../../models/AndroidCallLog";
 import {Message} from "../../models/Message";
 import {SMS} from "@ionic-native/sms";
@@ -21,17 +21,17 @@ export class SendingSmsProvider {
   lastCall: AndroidCallLog = null;
   lastCallNumber: string = null;
 
-  favoriteMessage:Message = null;
+  favoriteMessage: Message = null;
 
-  username:string = '';
-  isUsernameValid:boolean = false;
+  username: string = '';
+  isUsernameValid: boolean = false;
 
-  constructor(private callLogService:CallLogProvider,
+  constructor(private callLogService: CallLogProvider,
               private sms: SMS,
               private dialogs: Dialogs,
-              private socialSharing:SocialSharing,
-              private userSettingsProvider:UserSettingsProvider,
-              private messagesStorageProvider:MessagesStorageProvider){
+              private socialSharing: SocialSharing,
+              private userSettingsProvider: UserSettingsProvider,
+              private messagesStorageProvider: MessagesStorageProvider) {
     this.callLogService.lastCallObservable.subscribe((lastCall) => {
       this.lastCall = lastCall;
       this.setLastCallNumber();
@@ -43,20 +43,20 @@ export class SendingSmsProvider {
       });
 
     this.userSettingsProvider.storedXsiteUsernameObservable
-      .subscribe((username)=>{
+      .subscribe((username) => {
         this.username = username;
       });
 
     this.userSettingsProvider.usernameValidityObservable
-      .subscribe((isValid)=>{
+      .subscribe((isValid) => {
         this.isUsernameValid = isValid;
       });
   }
 
-  private addInternationalPrefixForPhoneNumber(phoneNumber:string) {
+  private addInternationalPrefixForPhoneNumber(phoneNumber: string) {
     if (phoneNumber !== null && phoneNumber[0] === '0') {
       phoneNumber.substr(1);
-      phoneNumber = '+972' + this.lastCallNumber;
+      phoneNumber = '+972' + phoneNumber;
     }
     return phoneNumber;
   }
@@ -66,22 +66,33 @@ export class SendingSmsProvider {
       && (this.lastCall.number !== null) && (this.lastCall.number !== undefined)) ? this.lastCall.number : null;
   }
 
-  sendFavoriteMessageViaSmsAppToPhoneNumber(phoneNumber:string){
+  sendFavoriteMessageViaSmsAppToPhoneNumber(phoneNumber: string) {
     this.sendSmsMessage(this.favoriteMessage, [phoneNumber]);
+  }
+
+  sendMessageViaSmsAppToPhoneNumber(message:Message, phoneNumber: string) {
+    this.sendSmsMessage(message, [phoneNumber]);
   }
 
   sendSmsFavoriteMessageToLastCaller() {
     this.sendFavoriteMessageViaSmsAppToPhoneNumber(this.lastCallNumber);
   }
 
-  sendFavoriteMessageViaWhatsAppToPhoneNumber(phoneNumber:string){
+  sendFavoriteMessageViaWhatsAppToPhoneNumber(phoneNumber: string) {
     let prefixedPhoneNumber = this.addInternationalPrefixForPhoneNumber(phoneNumber);
 
     this.socialSharing
-      .shareViaWhatsAppToReceiver(prefixedPhoneNumber,this.getCompleteMessage(this.favoriteMessage), null, null);
+      .shareViaWhatsAppToReceiver(prefixedPhoneNumber, this.getCompleteMessage(this.favoriteMessage), null, null);
   }
 
-  sendFavoriteMessageViaWhatsAppToLastCaller(){
+  sendMessageViaWhatsAppToPhoneNumber(message: Message, phoneNumber: string) {
+    let prefixedPhoneNumber = this.addInternationalPrefixForPhoneNumber(phoneNumber);
+
+    this.socialSharing
+      .shareViaWhatsAppToReceiver(prefixedPhoneNumber, this.getCompleteMessage(message), null, null);
+  }
+
+  sendFavoriteMessageViaWhatsAppToLastCaller() {
     this.sendFavoriteMessageViaWhatsAppToPhoneNumber(this.lastCallNumber)
   }
 
@@ -92,27 +103,26 @@ export class SendingSmsProvider {
   sendSmsMessage(message: Message, contactNumbers: string[]) {
     this.sms.send(contactNumbers, this.getCompleteMessage(message))
       .then((args) => {
-        this.dialogs.alert('ההודעה נשלחה בהצלחה!','הודעה');
+        this.dialogs.alert('ההודעה נשלחה בהצלחה!', 'הודעה');
       }, (err) => {
         console.log('Error');
       });
   }
 
-  getCompleteMessage(message:Message){
-    if(this.isUsernameValid){
+  getCompleteMessage(message: Message) {
+    if (this.isUsernameValid) {
       return `${message.content}\n\n${this.getFullAddressForPersonalWebsite()}`;
     } else {
       return `${message.content}`;
     }
   }
 
-  getFullAddressForPersonalWebsite(){
-    if(this.isUsernameValid){
+  getFullAddressForPersonalWebsite() {
+    if (this.isUsernameValid) {
       return `${GENERAL_WEBSITE_PREFIX}${this.username}${GENERAL_WEBSITE_SUFFIX}`;
     }
     return '';
   }
-
 
 
 }
