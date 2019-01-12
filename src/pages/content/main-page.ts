@@ -1,9 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {IonicPage, NavController} from 'ionic-angular';
-import {SendingSmsProvider} from "../../providers/sending-sms/sending-sms";
 import {MessagesStorageProvider} from "../../providers/messages-storage/messages-storage";
 import {Message} from "../../models/Message";
-import {CallLogProvider} from "../../providers/call-log/call-log";
 import {SocialSharing} from "@ionic-native/social-sharing";
 
 @IonicPage()
@@ -17,8 +15,6 @@ export class MainPage implements OnDestroy {
   messages: Message[] = [];
 
   constructor(public navCtrl: NavController,
-              private sendingSmsProvider: SendingSmsProvider,
-              private callLogProvider: CallLogProvider,
               private socialSharing: SocialSharing,
               private messagesStorageProvider: MessagesStorageProvider) {
   }
@@ -33,8 +29,6 @@ export class MainPage implements OnDestroy {
       .subscribe((messages) => {
         this.messages = messages;
       });
-
-
   }
 
   sendMessageToLastCaller() {
