@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import {IonicPage, NavController} from 'ionic-angular';
 import {SendingSmsProvider} from "../../providers/sending-sms/sending-sms";
 import {MessagesStorageProvider} from "../../providers/messages-storage/messages-storage";
 import {Message} from "../../models/Message";
@@ -11,48 +11,46 @@ import {SocialSharing} from "@ionic-native/social-sharing";
   selector: 'main-page',
   templateUrl: 'main-page.html'
 })
-export class MainPage implements OnDestroy{
+export class MainPage implements OnDestroy {
 
-  favoriteMessage:Message = {id:null, content:''};
-  messages:Message[] = [];
+  favoriteMessage: Message = {id: null, content: '', isFavorite: false};
+  messages: Message[] = [];
 
   constructor(public navCtrl: NavController,
-              private sendingSmsProvider:SendingSmsProvider,
-              private callLogProvider:CallLogProvider,
-              private socialSharing:SocialSharing,
-              private messagesStorageProvider:MessagesStorageProvider) {
+              private sendingSmsProvider: SendingSmsProvider,
+              private callLogProvider: CallLogProvider,
+              private socialSharing: SocialSharing,
+              private messagesStorageProvider: MessagesStorageProvider) {
   }
 
   ionViewDidLoad() {
     this.messagesStorageProvider.favoriteMessageObservable
-      .subscribe((message)=>{
+      .subscribe((message) => {
         this.favoriteMessage = message;
       });
 
     this.messagesStorageProvider.messagesToSendObservable
-      .subscribe((messages)=>{
+      .subscribe((messages) => {
         this.messages = messages;
       });
 
 
   }
 
-  sendMessageToLastCaller(){
-    this.callLogProvider.fetchCallLog()
-      .then(()=>this.sendingSmsProvider.sendSmsFavoriteMessageToLastCaller());
+  sendMessageToLastCaller() {
+
   }
 
-  whatsAppShare(){
-    this.callLogProvider.fetchCallLog()
-      .then(()=>this.sendingSmsProvider.sendFavoriteMessageViaWhatsAppToLastCaller());
+  whatsAppShare() {
+
   }
 
-  regularShare(){
+  regularShare() {
     this.socialSharing.share(`${this.favoriteMessage.content}`, null, null, null);
   }
 
 
-  ngOnDestroy(){
+  ngOnDestroy() {
 
   }
 }
