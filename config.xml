@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>BusinessCardSender</name>
+<widget id="io.ionic.starter" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>TheXSiteDashboard</name>
     <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content original-src="index.html" src="http://10.0.0.13:8100" />
+    <author email="hi@ionicframework" href="http://ionicframework.com/">droruri</author>
+    <content original-src="index.html" src="http://192.168.43.35:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -88,6 +88,8 @@
     <plugin name="cordova-plugin-android-permissions" spec="1.0.0" />
     <plugin name="cordova-sms-plugin" spec="0.1.13" />
     <plugin name="cordova-plugin-x-socialsharing" spec="5.4.1" />
-    <allow-navigation href="http://10.0.0.13:8100" sessionid="41ac2da8" />
-    <engine name="android" spec="7.1.1" />
+    <allow-navigation href="http://10.0.0.9:8100" sessionid="ea6be4ff" />
+    <plugin name="cordova-plugin-contacts" spec="3.0.1" />
+    <allow-navigation href="http://192.168.43.35:8100" sessionid="a596fd2a" />
+    <engine name="android" spec="^7.1.4" />
 </widget>
