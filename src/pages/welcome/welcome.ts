@@ -4,7 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 /**
  * The Welcome Page is a splash page that quickly describes the app,
  * and then directs the user to create an account or log in.
- * If you'd like to immediately put the user onto a login/signup page,
+ * If you'd like to immediately put the user onto a addNewMessage/showLastCalls page,
  * we recommend not using the Welcome page.
 */
 @IonicPage()
@@ -16,11 +16,11 @@ export class WelcomePage {
 
   constructor(public navCtrl: NavController) { }
 
-  login() {
-    this.navCtrl.push('LoginPage');
+  addNewMessage() {
+    this.navCtrl.setRoot('AddNewMessagePage', {}, {animate: true, direction: 'forward'});
   }
 
-  signup() {
-    this.navCtrl.push('SignupPage');
+  showLastCalls() {
+    this.navCtrl.setRoot('LastCallsViewPage', {}, {animate: true, direction: 'forward'});
   }
 }

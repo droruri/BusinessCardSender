@@ -1,20 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { TranslateService } from '@ngx-translate/core';
+import {Component, ViewChild} from '@angular/core';
+import {SplashScreen} from '@ionic-native/splash-screen';
+import {StatusBar} from '@ionic-native/status-bar';
+import {TranslateService} from '@ngx-translate/core';
 import {Config, Nav, Platform, ToastController} from 'ionic-angular';
 
-import { FirstRunPage } from '../pages';
+import {FirstRunPage} from '../pages';
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {PermissionsProvider} from "../providers/permissions/permissions";
 
 @Component({
-  templateUrl:"./app.component.html"
+  templateUrl: "./app.component.html"
 })
 export class MyApp {
   rootPage = FirstRunPage;
-  counter=0;
-  toastFadingTimeInMilliseconds = 6000;
+  counter = 0;
+  toastFadingTimeInMilliseconds = 3000;
 
   @ViewChild(Nav) nav: Nav;
 
@@ -39,7 +39,9 @@ export class MyApp {
         if (this.counter == 0) {
           this.counter++;
           this.presentToast();
-          setTimeout(() => { this.counter = 0 }, this.toastFadingTimeInMilliseconds)
+          setTimeout(() => {
+            this.counter = 0
+          }, this.toastFadingTimeInMilliseconds)
         } else {
           // console.log("exitapp");
           platform.exitApp();
@@ -82,14 +84,12 @@ export class MyApp {
   }
 
   private askUserForInitialPermissions() {
-    this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CALL_LOG)
-      .then(()=>console.log("READ_CALL_LOG success"));
-    this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CONTACTS)
-      .then(()=>console.log("READ_CONTACTS success"));
-    this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.SEND_SMS)
-      .then(()=>console.log("SEND_SMS success"));
-    this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
-      .then(()=>console.log("READ_PHONE_STATE success"));
+    Promise.all([
+      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CALL_LOG),
+      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CONTACTS),
+      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.SEND_SMS),
+      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
+    ]);
   }
 
   initTranslate() {
