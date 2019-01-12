@@ -3,7 +3,17 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{ 'LAST_CALLS_VIEW' | translate }}</ion-title>
+    <ion-title>
+      <span class="flex-row">
+        <span>{{ 'LAST_CALLS_VIEW' | translate }}</span>
+        <ion-icon
+          name="refresh"
+          class="refresh-calls"
+          (click)="refreshCalls()">
+        </ion-icon>
+      </span>
+    </ion-title>
+
   </ion-navbar>
 </ion-header>
 
@@ -24,24 +34,40 @@
     </ion-item>
   </ion-list>
   <ion-grid>
-    <ion-row>
-      <ion-col text-center="true">
-        <h1>הודעה לשליחה:</h1>
+    <ion-row class="buttons-slider-main">
+      <ion-col class="flex-col" col-1 (click)="setNextIndex(index)">
+        <ion-icon class="navigation-button"
+                   name="arrow-back">
+        </ion-icon>
       </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col text-center="true">
-        {{displayContent()}}
+      <ion-col col-10 text-center>
+      <span>
+        <ion-grid>
+        <ion-row>
+          <ion-col text-center="true">
+            <h1>הודעה לשליחה:</h1>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col text-center="true">
+            {{messages[index]?.content}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col text-center="true">
+            <span [hidden]="isUsernameValid" class="warning-message">
+              שים לב! שם המשתמש לא תקין/לא הוזן, כתובת האתר לא תישלח
+            </span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      </span>
       </ion-col>
-    </ion-row>
-
-    <ion-row [hidden]="isUsernameValid">
-      <ion-col text-center="true">
-        <span class="warning-message">
-          שים לב! שם המשתמש לא תקין/לא הוזן, כתובת האתר לא תישלח
-        </span>
+      <ion-col class="flex-col" col-1 (click)="setPreviousIndex(index)">
+        <ion-icon class="navigation-button"
+                   name="arrow-forward">
+        </ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>

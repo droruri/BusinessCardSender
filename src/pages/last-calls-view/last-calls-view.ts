@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {CallLogProvider} from "../../providers/call-log/call-log";
 import {Subscription} from "rxjs";
 import {CallDetails} from "../../models/CallDetails";
@@ -22,22 +22,24 @@ import {UserSettingsProvider} from "../../providers/user-settings/user-settings"
 })
 export class LastCallsViewPage {
 
-  lastCalls:CallDetails[];
-  callLogPhoneNumbersSubscription:Subscription;
-  usernameValiditySubscription:Subscription;
+  lastCalls: CallDetails[] = [];
+  callLogPhoneNumbersSubscription: Subscription;
+  usernameValiditySubscription: Subscription;
 
-  favoriteMessage:Message = {id:null, content:""};
+  messages: Message[] = [];
+  chosenMessage: Message;
 
-  isUsernameValid:boolean = false;
+  isUsernameValid: boolean = false;
 
   NUMBER_OF_LAST_CALLS = 10;
+  index = 0;
 
   constructor(public navCtrl: NavController,
-              private callLog:CallLogProvider,
-              private sendingSmsProvider:SendingSmsProvider,
-              private callLogProvider:CallLogProvider,
-              public messagesStorageProvider:MessagesStorageProvider,
-              private userSettingsProvider:UserSettingsProvider,
+              private callLog: CallLogProvider,
+              private sendingSmsProvider: SendingSmsProvider,
+              private callLogProvider: CallLogProvider,
+              public messagesStorageProvider: MessagesStorageProvider,
+              private userSettingsProvider: UserSettingsProvider,
               public navParams: NavParams) {
 
   }
@@ -50,39 +52,44 @@ export class LastCallsViewPage {
         this.lastCalls = [...callLogs.slice(0, this.NUMBER_OF_LAST_CALLS)]
       });
 
-    this.messagesStorageProvider.favoriteMessageObservable.subscribe((message)=>{
-      this.favoriteMessage = message;
+    this.messagesStorageProvider.messagesToSendObservable.subscribe((res: Message[]) => {
+      this.initializeAllMessages(res);
     });
 
     this.usernameValiditySubscription = this.userSettingsProvider.usernameValidityObservable
-      .subscribe((isValid)=>{
+      .subscribe((isValid) => {
         this.isUsernameValid = isValid;
       })
   }
 
-  ionViewDidLeave(){
+  private initializeAllMessages(_allMessages: Message[]) {
+    const allMessages = _allMessages;
+    if (allMessages.length > 0) {
+      this.messages = allMessages;
+      this.initializeFavoriteMessage();
+    }
+  }
+
+  private initializeFavoriteMessage() {
+    this.index = this.messages.findIndex(message => message.isFavorite === true);
+    this.chosenMessage = this.messages[this.index];
+  }
+
+  ionViewDidLeave() {
     this.callLogPhoneNumbersSubscription.unsubscribe();
     this.usernameValiditySubscription.unsubscribe();
   }
 
-  sendWhatsappMessage(phoneNumber:string){
-    this.sendingSmsProvider.sendFavoriteMessageViaWhatsAppToPhoneNumber(phoneNumber);
+  sendWhatsappMessage(phoneNumber: string) {
+    this.sendingSmsProvider.sendMessageViaWhatsAppToPhoneNumber(this.chosenMessage, phoneNumber);
   }
 
-  sendSmsMessage(phoneNumber:string){
-    this.sendingSmsProvider.sendFavoriteMessageViaSmsAppToPhoneNumber(phoneNumber);
+  sendSmsMessage(phoneNumber: string) {
+    this.sendingSmsProvider.sendMessageViaSmsAppToPhoneNumber(this.chosenMessage, phoneNumber);
   }
 
-  displayContent():string{
-    if(this.isFavoriteMessageInvalid()){
-      return 'עדיין לא נבחרה הודעה מועדפת';
-    }
-    return this.favoriteMessage.content;
-  }
-
-  isFavoriteMessageInvalid(){
-    return this.favoriteMessage === null || this.favoriteMessage === undefined ||
-      this.favoriteMessage.content.length === 0;
+  isFavoriteMessageInvalid() {
+    return this.messages === null || this.messages === undefined;
   }
 
   getContactNameOrNumber(phoneNumber: CallDetails) {
@@ -91,5 +98,27 @@ export class LastCallsViewPage {
     } else {
       return phoneNumber.number;
     }
+  }
+
+  setPreviousIndex(index: number) {
+    if (index > 0) {
+      this.index = this.index - 1;
+      this.setMessageToDisplayByIndex(this.index);
+    }
+  }
+
+  setNextIndex(index: number) {
+    if (index < (this.messages.length - 1)) {
+      this.index = this.index + 1;
+      this.setMessageToDisplayByIndex(this.index);
+    }
+  }
+
+  setMessageToDisplayByIndex(index: number) {
+    this.chosenMessage = this.messages[index];
+  }
+
+  refreshCalls() {
+    this.callLogProvider.fetchCallLog();
   }
 }
