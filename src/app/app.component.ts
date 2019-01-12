@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import {Config, Nav, Platform, ToastController} from 'ionic-angular';
 
 import { FirstRunPage } from '../pages';
-import { Settings } from '../providers';
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {PermissionsProvider} from "../providers/permissions/permissions";
 
@@ -23,7 +22,6 @@ export class MyApp {
 
   constructor(private translate: TranslateService,
               private platform: Platform,
-              settings: Settings,
               private config: Config,
               private statusBar: StatusBar,
               private splashScreen: SplashScreen,
