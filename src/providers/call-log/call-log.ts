@@ -48,9 +48,11 @@ export class CallLogProvider {
   }
 
   private onGettingCallLogs(callLogs) {
-    this.callLogs = callLogs.sort(this.sortCallsByDescDate());
-    this.observeAndSendAllPhoneNumbersOfCallLog();
-    this.observeIfThereIsLastCallAndSetLastCallIfExist();
+    if(callLogs !== null && callLogs !== undefined){
+      this.callLogs = callLogs.sort(this.sortCallsByDescDate());
+      this.observeAndSendAllPhoneNumbersOfCallLog();
+      this.observeIfThereIsLastCallAndSetLastCallIfExist();
+    }
   }
 
   private observeIfThereIsLastCallAndSetLastCallIfExist() {
@@ -74,21 +76,28 @@ export class CallLogProvider {
     return (a: AndroidCallLog, b: AndroidCallLog) => Number(b.date) - Number(a.date);
   }
 
+  private sortCallDetailsByDescDate() {
+    return (a: CallDetails, b: CallDetails) => Number(b.date) - Number(a.date);
+  }
+
   private observeAndSendAllPhoneNumbersOfCallLog() {
     this.callLogs.forEach(
-      (callLog) => this.phoneNumbers.push({name: callLog.name, number: callLog.number}));
+      (callLog) => this.phoneNumbers.push(
+        {name: callLog.name, number: callLog.number, date: Number(callLog.date)}
+        ));
+    this.phoneNumbers = this.phoneNumbers.sort(this.sortCallDetailsByDescDate());
     this.phoneNumbers = this.removeDuplicateNumbersFromArray(this.phoneNumbers);
     this.callLogPhoneNumbersSubject.next(this.phoneNumbers);
   }
 
   private removeDuplicateNumbersFromArray(callDetails:CallDetails[]){
     return callDetails.filter((item, pos) => {
-      return this.getNumbersFromCallDetails(callDetails)
+      return CallLogProvider.getNumbersFromCallDetails(callDetails)
         .indexOf(item.number) == pos
     })
   }
 
-  private getNumbersFromCallDetails(callDetails:CallDetails[]){
+  private static getNumbersFromCallDetails(callDetails:CallDetails[]){
     return callDetails.map(callDetail=>callDetail.number);
   }
 }
