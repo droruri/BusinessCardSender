@@ -5,8 +5,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {Config, Nav, Platform, ToastController} from 'ionic-angular';
 
 import {FirstRunPage} from '../pages';
-import {AndroidPermissions} from "@ionic-native/android-permissions";
-import {PermissionsProvider} from "../providers/permissions/permissions";
 
 @Component({
   templateUrl: "./app.component.html"
@@ -25,13 +23,10 @@ export class MyApp {
               private config: Config,
               private statusBar: StatusBar,
               private splashScreen: SplashScreen,
-              private androidPermissions: AndroidPermissions,
-              private permissionsProvider: PermissionsProvider,
               private toastCtrl: ToastController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      this.askUserForInitialPermissions();
       this.performVisualActionsOnInitialize();
       this.translatePageTitles(translate);
 
@@ -40,7 +35,7 @@ export class MyApp {
           this.counter++;
           this.presentToast();
           setTimeout(() => {
-            this.counter = 0
+            this.counter = 0;
           }, this.toastFadingTimeInMilliseconds)
         } else {
           // console.log("exitapp");
@@ -83,14 +78,6 @@ export class MyApp {
     this.splashScreen.hide();
   }
 
-  private askUserForInitialPermissions() {
-    Promise.all([
-      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CALL_LOG),
-      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_CONTACTS),
-      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.SEND_SMS),
-      this.permissionsProvider.askUserToUsePermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
-    ]);
-  }
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
