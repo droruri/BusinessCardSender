@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController} from 'ionic-angular';
 import {CallLogProvider} from "../../providers/call-log/call-log";
 import {Subscription} from "rxjs";
 import {CallDetails} from "../../models/CallDetails";
@@ -7,6 +7,7 @@ import {SendingSmsProvider} from "../../providers/sending-sms/sending-sms";
 import {MessagesStorageProvider} from "../../providers/messages-storage/messages-storage";
 import {Message} from "../../models/Message";
 import {UserSettingsProvider} from "../../providers/user-settings/user-settings";
+import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 /**
  * Generated class for the LastCallsViewPage page.
@@ -38,10 +39,30 @@ export class LastCallsViewPage {
               private callLog: CallLogProvider,
               private sendingSmsProvider: SendingSmsProvider,
               private callLogProvider: CallLogProvider,
+              private androidPermissions: AndroidPermissions,
               public messagesStorageProvider: MessagesStorageProvider,
-              private userSettingsProvider: UserSettingsProvider,
-              public navParams: NavParams) {
+              private userSettingsProvider: UserSettingsProvider) {
 
+  }
+
+  ionViewCanEnter(): Promise<any>{
+    return new Promise((resolve, reject) => {
+      this.androidPermissions.requestPermissions([
+        this.androidPermissions.PERMISSION.READ_CALL_LOG,
+        this.androidPermissions.PERMISSION.READ_CONTACTS,
+        this.androidPermissions.PERMISSION.SEND_SMS,
+        this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      ]).then(() =>{
+          console.log(true);
+          resolve(true);
+        }
+        ,
+        () => {
+          this.navCtrl.setRoot('WelcomePage');
+          console.log(false);
+          resolve(false);
+        })
+    })
   }
 
   ionViewDidEnter() {
