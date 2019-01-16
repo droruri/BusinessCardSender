@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {UserSettingsProvider} from "../../providers/user-settings/user-settings";
+import {AppState} from "../../state-management/app-state";
+import {Store} from "@ngrx/store";
+import {getReferenceId, getXSiteUsername} from "../../state-management/settings.selector";
+import {Dialogs} from "@ionic-native/dialogs";
 
 
 /**
@@ -20,18 +24,27 @@ export class SettingsPage {
 
   page: string = 'main';
 
-  username:string = '';
+  username: string = '';
+  referenceId: number = null;
 
   constructor(public navCtrl: NavController,
-    public navParams: NavParams,
-    public translate: TranslateService,
-              private userSettingsProvider:UserSettingsProvider) {
+              public navParams: NavParams,
+              public translate: TranslateService,
+              private store: Store<AppState>,
+              private dialogs: Dialogs,
+              private userSettingsProvider: UserSettingsProvider) {
   }
 
   ionViewDidLoad() {
-    this.userSettingsProvider.storedXsiteUsernameObservable.subscribe((username) => {
-      this.username = username;
-    })
+    this.store.select(getXSiteUsername)
+      .subscribe((username) => {
+        this.username = username;
+      });
+
+    this.store.select(getReferenceId)
+      .subscribe((referenceId) => {
+        this.referenceId = referenceId;
+      })
   }
 
   ionViewWillEnter() {
@@ -44,7 +57,7 @@ export class SettingsPage {
     console.log('Ng All Changes');
   }
 
-  saveSettings(){
-    this.userSettingsProvider.storeUserNameInLocalStorage(this.username);
+  saveSettings() {
+    this.userSettingsProvider.saveSettings(this.username, this.referenceId);
   }
 }

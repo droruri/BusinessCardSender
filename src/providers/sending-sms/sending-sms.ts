@@ -6,8 +6,10 @@ import {CallLogProvider} from "../call-log/call-log";
 import {MessagesStorageProvider} from "../messages-storage/messages-storage";
 import {Dialogs} from "@ionic-native/dialogs";
 import {SocialSharing} from "@ionic-native/social-sharing";
-import {UserSettingsProvider} from "../user-settings/user-settings";
-import {GENERAL_WEBSITE_PREFIX, GENERAL_WEBSITE_SUFFIX} from "../../utilities/constants";
+import {GENERAL_WEBSITE_PREFIX, GENERAL_WEBSITE_SUFFIX, REFERENCE_ID_SUFFIX} from "../../utilities/constants";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../state-management/app-state";
+import {getReferenceId, getSettingsValidity, getXSiteUsername} from "../../state-management/settings.selector";
 
 /*
   Generated class for the SendingSmsProvider provider.
@@ -24,13 +26,14 @@ export class SendingSmsProvider {
   favoriteMessage: Message = null;
 
   username: string = '';
-  isUsernameValid: boolean = false;
+  areSettingsValid: boolean = false;
+  referenceId: number = null;
 
   constructor(private callLogService: CallLogProvider,
               private sms: SMS,
               private dialogs: Dialogs,
               private socialSharing: SocialSharing,
-              private userSettingsProvider: UserSettingsProvider,
+              private store: Store<AppState>,
               private messagesStorageProvider: MessagesStorageProvider) {
     this.callLogService.lastCallObservable.subscribe((lastCall) => {
       this.lastCall = lastCall;
@@ -42,15 +45,20 @@ export class SendingSmsProvider {
         this.favoriteMessage = message;
       });
 
-    this.userSettingsProvider.storedXsiteUsernameObservable
+    this.store.select(getXSiteUsername)
       .subscribe((username) => {
         this.username = username;
       });
 
-    this.userSettingsProvider.usernameValidityObservable
+    this.store.select(getSettingsValidity)
       .subscribe((isValid) => {
-        this.isUsernameValid = isValid;
+        this.areSettingsValid = isValid;
       });
+
+    this.store.select(getReferenceId)
+      .subscribe((referenceId) => {
+        this.referenceId = referenceId;
+      })
   }
 
   private addInternationalPrefixForPhoneNumber(phoneNumber: string) {
@@ -110,7 +118,7 @@ export class SendingSmsProvider {
   }
 
   getCompleteMessage(message: Message) {
-    if (this.isUsernameValid) {
+    if (this.areSettingsValid) {
       return `${message.content}\n\n${this.getFullAddressForPersonalWebsite()}`;
     } else {
       return `${message.content}`;
@@ -118,8 +126,8 @@ export class SendingSmsProvider {
   }
 
   getFullAddressForPersonalWebsite() {
-    if (this.isUsernameValid) {
-      return `${GENERAL_WEBSITE_PREFIX}${this.username}${GENERAL_WEBSITE_SUFFIX}`;
+    if (this.areSettingsValid) {
+      return `${GENERAL_WEBSITE_PREFIX}${this.username}${GENERAL_WEBSITE_SUFFIX}${REFERENCE_ID_SUFFIX}${this.referenceId}`;
     }
     return '';
   }

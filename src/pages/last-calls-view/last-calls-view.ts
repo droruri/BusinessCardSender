@@ -6,8 +6,10 @@ import {CallDetails} from "../../models/CallDetails";
 import {SendingSmsProvider} from "../../providers/sending-sms/sending-sms";
 import {MessagesStorageProvider} from "../../providers/messages-storage/messages-storage";
 import {Message} from "../../models/Message";
-import {UserSettingsProvider} from "../../providers/user-settings/user-settings";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
+import {AppState} from "../../state-management/app-state";
+import {Store} from "@ngrx/store";
+import {getSettingsValidity} from "../../state-management/settings.selector";
 
 /**
  * Generated class for the LastCallsViewPage page.
@@ -30,7 +32,7 @@ export class LastCallsViewPage {
   messages: Message[] = [];
   chosenMessage: Message;
 
-  isUsernameValid: boolean = false;
+  areSettingsValid: boolean = false;
 
   NUMBER_OF_LAST_CALLS = 10;
   index = 0;
@@ -41,7 +43,7 @@ export class LastCallsViewPage {
               private callLogProvider: CallLogProvider,
               private androidPermissions: AndroidPermissions,
               public messagesStorageProvider: MessagesStorageProvider,
-              private userSettingsProvider: UserSettingsProvider) {
+              private store: Store<AppState>) {
 
   }
 
@@ -77,9 +79,9 @@ export class LastCallsViewPage {
       this.initializeAllMessages(res);
     });
 
-    this.usernameValiditySubscription = this.userSettingsProvider.usernameValidityObservable
+    this.usernameValiditySubscription = this.store.select(getSettingsValidity)
       .subscribe((isValid) => {
-        this.isUsernameValid = isValid;
+        this.areSettingsValid = isValid;
       })
   }
 
