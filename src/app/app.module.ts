@@ -24,7 +24,9 @@ import { PermissionsProvider } from '../providers/permissions/permissions';
 import {SocialSharing} from "@ionic-native/social-sharing";
 import { UserSettingsProvider } from '../providers/user-settings/user-settings';
 import {ComponentsModule} from "../components/components.module";
-import {ChooseMessageComponent} from "../components/dynamic/choose-message/choose-message";
+import {StoreModule} from "@ngrx/store";
+import {reducers} from "../state-management/app-state";
+import {SettingsActions} from "../state-management/settings.actions";
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -34,8 +36,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [
-    MyApp,
-    ChooseMessageComponent
+    MyApp
   ],
   imports: [
     BrowserModule,
@@ -49,7 +50,8 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
-    ComponentsModule
+    ComponentsModule,
+    StoreModule.forRoot(reducers)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -74,7 +76,8 @@ export function createTranslateLoader(http: HttpClient) {
     SMS,
     SocialSharing,
     PermissionsProvider,
-    UserSettingsProvider
+    UserSettingsProvider,
+    SettingsActions
   ],
   schemas: [NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA]
 })
