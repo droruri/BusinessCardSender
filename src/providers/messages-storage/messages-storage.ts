@@ -85,9 +85,7 @@ export class MessagesStorageProvider {
 
   deleteMessageById(messageToDeleteId: number) {
     return new Promise((resolve, reject) => {
-      const messagesWithoutMessageToDelete = this.messagesToSend.filter((message) => message.id !== messageToDeleteId);
-      this.messagesToSend = [...messagesWithoutMessageToDelete];
-      this.setMessageAsFavorite(this.messagesToSend[0]);
+      this.deleteMessageAndSetFavorite(messageToDeleteId);
       this.updateMessagesInLocalStorage([...this.messagesToSend])
         .then(() => {
           this.popSuccessAlertForDeletingMessage();
@@ -95,6 +93,14 @@ export class MessagesStorageProvider {
         })
         .catch(()=>reject());
     })
+  }
+
+  private deleteMessageAndSetFavorite(messageToDeleteId: number) {
+    const messagesWithoutMessageToDelete = this.messagesToSend.filter((message) => message.id !== messageToDeleteId);
+    this.messagesToSend = [...messagesWithoutMessageToDelete];
+    if (this.messagesToSend.length > 0) {
+      this.setMessageAsFavorite(this.messagesToSend[0]);
+    }
   }
 
   setMessageAsFavorite(message: Message) {

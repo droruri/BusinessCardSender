@@ -50,7 +50,7 @@ export class MessagesManagingPage implements OnInit {
       if (result === OK_RESULT) {
         this._messagesStorageProvider.deleteMessageById(message.id)
           .then(() => {
-            if (message.id === this.favoriteMessage.id) {
+            if (this.favoriteMessage !== null && this.favoriteMessage !== undefined && message.id === this.favoriteMessage.id) {
               this.setFavoriteMessage(this.messagesToSend[0])
             }
           });

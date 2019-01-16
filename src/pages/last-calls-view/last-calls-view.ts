@@ -111,8 +111,9 @@ export class LastCallsViewPage {
     this.sendingSmsProvider.sendMessageViaSmsAppToPhoneNumber(this.chosenMessage, phoneNumber);
   }
 
-  isFavoriteMessageInvalid() {
-    return this.messages === null || this.messages === undefined;
+  isFavoriteMessageValid() {
+    return this.messages.length > 0 &&
+      this.messages.filter(message => message.isFavorite).length > 0;
   }
 
   getContactNameOrNumber(phoneNumber: CallDetails) {

@@ -23,12 +23,12 @@
       <ion-label class="phone-number">{{ getContactNameOrNumber(item) }}</ion-label>
       <button item-end class="transparent-background-icon"
               (click)="sendWhatsappMessage(item.number)"
-              [disabled]="isFavoriteMessageInvalid()">
+              [disabled]="!isFavoriteMessageValid()">
         <ion-icon class="whatsapp-icon" name="logo-whatsapp"></ion-icon>
       </button>
       <button item-end class="transparent-background-icon"
               (click)="sendSmsMessage(item.number)"
-              [disabled]="isFavoriteMessageInvalid()">
+              [disabled]="!isFavoriteMessageValid()">
         <ion-icon class="sms-icon" name="chatboxes"></ion-icon>
       </button>
     </ion-item>
