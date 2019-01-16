@@ -16,6 +16,11 @@
       <ion-input [(ngModel)]="username"></ion-input>
     </ion-item>
 
+    <ion-item>
+      <ion-label>מספר משתמש</ion-label>
+      <ion-input type="number" [(ngModel)]="referenceId"></ion-input>
+    </ion-item>
+
     <ion-item text-center="true">
       <button ion-button color="primary" (click)="saveSettings()">
         {{ 'SAVE_SETTINGS' | translate }}
