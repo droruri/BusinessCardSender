@@ -5,6 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Config, Nav, Platform, ToastController} from 'ionic-angular';
 
 import {FirstRunPage} from '../pages';
+import {UserSettingsProvider} from "../providers/user-settings/user-settings";
 
 @Component({
   templateUrl: "./app.component.html"
@@ -23,6 +24,7 @@ export class MyApp {
               private config: Config,
               private statusBar: StatusBar,
               private splashScreen: SplashScreen,
+              private userSettingsProvider: UserSettingsProvider,
               private toastCtrl: ToastController) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
