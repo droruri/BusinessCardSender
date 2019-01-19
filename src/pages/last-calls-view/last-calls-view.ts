@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController} from 'ionic-angular';
+import {IonicPage, ModalController, NavController} from 'ionic-angular';
 import {CallLogProvider} from "../../providers/call-log/call-log";
 import {Subscription} from "rxjs";
 import {CallDetails} from "../../models/CallDetails";
@@ -9,7 +9,11 @@ import {Message} from "../../models/Message";
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 import {AppState} from "../../state-management/app-state";
 import {Store} from "@ngrx/store";
-import {getSettingsValidity} from "../../state-management/settings.selector";
+import {getChosenAttachment, getSettingsValidity} from "../../state-management/settings.selector";
+import {ChoosePreferredAttachmentModalPage} from "../choose-prefered-attachment-modal/choose-prefered-attachment-modal";
+import {CallNumber} from "@ionic-native/call-number";
+import {attachments, CHOOSE_WHATSAPP} from "../../utilities/constants";
+import {Dialogs} from "@ionic-native/dialogs";
 
 /**
  * Generated class for the LastCallsViewPage page.
@@ -37,24 +41,34 @@ export class LastCallsViewPage {
   NUMBER_OF_LAST_CALLS = 10;
   index = 0;
 
+  attachment: attachments = CHOOSE_WHATSAPP;
+
   constructor(public navCtrl: NavController,
               private callLog: CallLogProvider,
               private sendingSmsProvider: SendingSmsProvider,
               private callLogProvider: CallLogProvider,
               private androidPermissions: AndroidPermissions,
               public messagesStorageProvider: MessagesStorageProvider,
+              public modalCtrl: ModalController,
+              private callNumber: CallNumber,
+              private dialogs: Dialogs,
               private store: Store<AppState>) {
+    this.store.select(getChosenAttachment)
+      .subscribe(attachment => {
+        this.attachment = attachment
+      });
 
   }
 
-  ionViewCanEnter(): Promise<any>{
+  ionViewCanEnter(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.androidPermissions.requestPermissions([
         this.androidPermissions.PERMISSION.READ_CALL_LOG,
         this.androidPermissions.PERMISSION.READ_CONTACTS,
         this.androidPermissions.PERMISSION.SEND_SMS,
-        this.androidPermissions.PERMISSION.READ_PHONE_STATE
-      ]).then(() =>{
+        this.androidPermissions.PERMISSION.READ_PHONE_STATE,
+        this.androidPermissions.PERMISSION.CALL_PHONE
+      ]).then(() => {
           console.log(true);
           resolve(true);
         }
@@ -111,6 +125,10 @@ export class LastCallsViewPage {
     this.sendingSmsProvider.sendMessageViaSmsAppToPhoneNumber(this.chosenMessage, phoneNumber);
   }
 
+  makePhoneCall(phoneNumber: string) {
+    this.callNumber.callNumber(phoneNumber, true);
+  }
+
   isFavoriteMessageValid() {
     return this.messages.length > 0 &&
       this.messages.filter(message => message.isFavorite).length > 0;
@@ -144,5 +162,20 @@ export class LastCallsViewPage {
 
   refreshCalls() {
     this.callLogProvider.fetchCallLog();
+  }
+
+  openModal(phoneNumber: string) {
+    if(!this.canMakeAttachment()){
+      this.dialogs.alert(`לא ניתן ליצור קשר עקב חוסר בפרטים מזהים!`, 'הודעה');
+    }else{
+      let myModal = this.modalCtrl.create(ChoosePreferredAttachmentModalPage,
+        {chosenMessage: this.chosenMessage, phoneNumber: phoneNumber},
+        { showBackdrop: true, enableBackdropDismiss: true, cssClass:'select-modal'});
+      myModal.present();
+    }
+  }
+
+  canMakeAttachment(){
+    return this.areSettingsValid && (this.messages.length > 0);
   }
 }

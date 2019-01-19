@@ -19,25 +19,39 @@
 
 <ion-content no-bounce>
   <ion-list class="last-calls-list">
-    <ion-item dir="rtl" *ngFor="let item of lastCalls">
-      <ion-label class="phone-number">{{ getContactNameOrNumber(item) }}</ion-label>
-      <button item-end class="transparent-background-icon"
-              (click)="sendWhatsappMessage(item.number)"
-              [disabled]="!isFavoriteMessageValid()">
+    <ion-item dir="rtl" *ngFor="let lastCall of lastCalls">
+      <button *ngIf="attachment === 'whatsapp'"
+              item-start
+              [disabled]="!canMakeAttachment()"
+              class="transparent-background-icon"
+              (click)="sendWhatsappMessage(lastCall.number)">
         <ion-icon class="whatsapp-icon" name="logo-whatsapp"></ion-icon>
       </button>
-      <button item-end class="transparent-background-icon"
-              (click)="sendSmsMessage(item.number)"
-              [disabled]="!isFavoriteMessageValid()">
+      <button *ngIf="attachment === 'sms'"
+              item-start
+              [disabled]="!canMakeAttachment()"
+              class="transparent-background-icon"
+              (click)="sendSmsMessage(lastCall.number)">
         <ion-icon class="sms-icon" name="chatboxes"></ion-icon>
       </button>
+      <button *ngIf="attachment === 'phone-call'"
+              item-start
+              [disabled]="!canMakeAttachment()"
+              class="transparent-background-icon"
+              (click)="makePhoneCall(lastCall.number)">
+        <ion-icon class="sms-icon" name="call"></ion-icon>
+      </button>
+      <ion-label class="phone-number" (click)="openModal(lastCall.number)">
+        {{ getContactNameOrNumber(lastCall) }}
+      </ion-label>
+
     </ion-item>
   </ion-list>
   <ion-grid>
     <ion-row class="buttons-slider-main">
       <ion-col class="flex-col" col-1 (click)="setNextIndex(index)">
         <ion-icon class="navigation-button"
-                   name="arrow-back">
+                  name="arrow-back">
         </ion-icon>
       </ion-col>
       <ion-col col-10 text-center>
@@ -55,8 +69,8 @@
         </ion-row>
         <ion-row>
           <ion-col text-center="true">
-            <span [hidden]="areSettingsValid" class="warning-message">
-              שים לב! שם המשתמש או מספר מזהה לא תקינים/לא הוזנו, כתובת האתר לא תישלח
+            <span [hidden]="canMakeAttachment()" class="warning-message">
+              שים לב! שם המשתמש ו/או מספר מזהה ו/או הודעה לא תקינים/לא הוזנו, ההודעה לא תישלח
             </span>
           </ion-col>
         </ion-row>
@@ -65,7 +79,7 @@
       </ion-col>
       <ion-col class="flex-col" col-1 (click)="setPreviousIndex(index)">
         <ion-icon class="navigation-button"
-                   name="arrow-forward">
+                  name="arrow-forward">
         </ion-icon>
       </ion-col>
     </ion-row>
