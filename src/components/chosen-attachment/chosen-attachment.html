@@ -1,0 +1,12 @@
+<button *ngIf="attachment === 'whatsapp'" item-end class="transparent-background-icon"
+        (click)="sendWhatsappMessage()">
+  <ion-icon class="whatsapp-icon" name="logo-whatsapp"></ion-icon>
+</button>
+<button *ngIf="attachment === 'sms'" item-end class="transparent-background-icon"
+        (click)="sendSmsMessage()">
+  <ion-icon class="sms-icon" name="chatboxes"></ion-icon>
+</button>
+<button *ngIf="attachment === 'phone-call'" item-end class="transparent-background-icon"
+        (click)="makePhoneCall()">
+  <ion-icon class="sms-icon" name="call"></ion-icon>
+</button>

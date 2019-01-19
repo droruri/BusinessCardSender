@@ -27,6 +27,8 @@ import {ComponentsModule} from "../components/components.module";
 import {StoreModule} from "@ngrx/store";
 import {reducers} from "../state-management/app-state";
 import {SettingsActions} from "../state-management/settings.actions";
+import {ChoosePreferredAttachmentModalPage} from "../pages/choose-prefered-attachment-modal/choose-prefered-attachment-modal";
+import {CallNumber} from "@ionic-native/call-number";
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -36,7 +38,8 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
+    ChoosePreferredAttachmentModalPage
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp
+    MyApp,
+    ChoosePreferredAttachmentModalPage
   ],
   providers: [
     Api,
@@ -77,7 +81,8 @@ export function createTranslateLoader(http: HttpClient) {
     SocialSharing,
     PermissionsProvider,
     UserSettingsProvider,
-    SettingsActions
+    SettingsActions,
+    CallNumber
   ],
   schemas: [NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA]
 })

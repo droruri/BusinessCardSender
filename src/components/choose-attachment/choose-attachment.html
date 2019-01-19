@@ -1,0 +1,25 @@
+<ion-grid>
+  <ion-row text-center>
+    <ion-col [ngClass]="{'not-chosen-element': (attachment !== 'whatsapp')}">
+      <button class="transparent-background-icon"
+              (click)="setNewAttachment('whatsapp')">
+        <ion-icon class="whatsapp-icon" name="logo-whatsapp"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col [ngClass]="{'not-chosen-element': (attachment !== 'sms')}">
+      <button class="transparent-background-icon"
+              (click)="setNewAttachment('sms')">
+        <ion-icon class="sms-icon" name="chatboxes"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col [ngClass]="{'not-chosen-element': (attachment !== 'phone-call')}">
+      <button class="transparent-background-icon"
+              (click)="setNewAttachment('phone-call')">
+        <ion-icon class="sms-icon" name="call"></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+
