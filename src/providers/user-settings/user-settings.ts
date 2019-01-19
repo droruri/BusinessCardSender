@@ -6,7 +6,8 @@ import {Store} from "@ngrx/store";
 import {SettingsActions} from "../../state-management/settings.actions";
 import {getReferenceId, getXSiteUsername} from "../../state-management/settings.selector";
 import {Dialogs} from "@ionic-native/dialogs";
-import {REFERENCE_ID, XSITE_USERNAME} from "./SETTINGS_IDENTIFIERS";
+import {ATTACHMENT, REFERENCE_ID, XSITE_USERNAME} from "./SETTINGS_IDENTIFIERS";
+import {attachments, CHOOSE_WHATSAPP} from "../../utilities/constants";
 
 /*
   Generated class for the UserSettingsProvider provider.
@@ -61,23 +62,27 @@ export class UserSettingsProvider {
 
   private setRefId(refId: number) {
     this.store.dispatch(this.settingsActions.storeReferenceId(refId));
-    this.store.dispatch(this.settingsActions.storeSettingsValidity(UserSettingsProvider.areSettingsValid(this.username, refId)));
   }
 
-  private static areSettingsValid(username: string, refId: number) {
-    return username !== null &&
-      username !== undefined &&
-      username.length > 0 && refId !== null &&
-      refId !== undefined;
+  private setAttachment(attachment: attachments) {
+    if (attachment === null || attachment === undefined) {
+      this.store.dispatch(this.settingsActions.storeChosenAttachment(CHOOSE_WHATSAPP));
+    } else {
+      this.store.dispatch(this.settingsActions.storeChosenAttachment(attachment));
+    }
   }
 
-  saveSettings(username: string, referenceId: number) {
+
+
+  saveSettings(username: string, referenceId: number, attachment: attachments) {
     return Promise.all([
       this.storeValueByKeyInLocalStorage(username, XSITE_USERNAME),
-      this.storeValueByKeyInLocalStorage(referenceId.toString(), REFERENCE_ID)
+      this.storeValueByKeyInLocalStorage(referenceId.toString(), REFERENCE_ID),
+      this.storeValueByKeyInLocalStorage(attachment, ATTACHMENT)
     ]).then(() => {
       this.setUsername(username);
       this.setRefId(referenceId);
+      this.setAttachment(attachment);
       this.dialogs.alert(`השינויים נשמרו בהצלחה`, 'הודעה');
     })
   }
@@ -85,13 +90,13 @@ export class UserSettingsProvider {
   loadSettings() {
     return Promise.all([
       this.loadValueByKeyFromLocalStorage(XSITE_USERNAME),
-      this.loadValueByKeyFromLocalStorage(REFERENCE_ID)
-    ]).then((result: [string, number]) => {
+      this.loadValueByKeyFromLocalStorage(REFERENCE_ID),
+      this.loadValueByKeyFromLocalStorage(ATTACHMENT)
+    ]).then((result: [string, number, attachments]) => {
       this.setUsername(result[0]);
       this.setRefId(result[1]);
-    }).then(() => {
-        this.store.dispatch(this.settingsActions.storeSettingsValidity(UserSettingsProvider.areSettingsValid(this.username, this.referenceId)));
-      })
+      this.setAttachment(result[2]);
+    });
   }
 
 }
