@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActionModel} from "./action.model";
+import {attachments} from "../utilities/constants";
 
 @Injectable()
 export class SettingsActions {
@@ -25,6 +26,14 @@ export class SettingsActions {
     return {
       type: SettingsActions.STORE_REFERENCE_ID,
       payload: id
+    }
+  }
+
+  static STORE_CHOSEN_ATTACHMENT = 'STORE_CHOSEN_ATTACHMENT';
+  storeChosenAttachment(attachment: attachments): ActionModel {
+    return {
+      type: SettingsActions.STORE_CHOSEN_ATTACHMENT,
+      payload: attachment
     }
   }
 

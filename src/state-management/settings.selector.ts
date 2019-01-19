@@ -17,3 +17,8 @@ export const getReferenceId = createSelector(
   getSettings,
   (state: SettingsState) => state.referenceId
 );
+
+export const getChosenAttachment = createSelector(
+  getSettings,
+  (state: SettingsState) => state.chosenAttachment
+);
