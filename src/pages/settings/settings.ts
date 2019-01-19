@@ -6,6 +6,7 @@ import {AppState} from "../../state-management/app-state";
 import {Store} from "@ngrx/store";
 import {getReferenceId, getXSiteUsername} from "../../state-management/settings.selector";
 import {Dialogs} from "@ionic-native/dialogs";
+import {attachments} from "../../utilities/constants";
 
 
 /**
@@ -26,6 +27,7 @@ export class SettingsPage {
 
   username: string = '';
   referenceId: number = null;
+  attachment:attachments;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -53,11 +55,7 @@ export class SettingsPage {
     this.page = this.navParams.get('page') || this.page;
   }
 
-  ngOnChanges() {
-    console.log('Ng All Changes');
-  }
-
   saveSettings() {
-    this.userSettingsProvider.saveSettings(this.username, this.referenceId);
+    this.userSettingsProvider.saveSettings(this.username, this.referenceId, this.attachment);
   }
 }

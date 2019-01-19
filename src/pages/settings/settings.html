@@ -21,9 +21,13 @@
       <ion-input type="number" [(ngModel)]="referenceId"></ion-input>
     </ion-item>
 
+    <ion-item>
+      <choose-attachment (chosenAttachment)="attachment = $event"></choose-attachment>
+    </ion-item>
+
     <ion-item text-center="true">
-      <button ion-button color="primary" (click)="saveSettings()">
-        {{ 'SAVE_SETTINGS' | translate }}
+      <button ion-button (click)="saveSettings()">
+        שמור
       </button>
     </ion-item>
   </ion-list>
